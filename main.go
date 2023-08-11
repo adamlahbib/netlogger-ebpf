@@ -84,12 +84,14 @@ func main() {
 		data.DstIP = int32(binary.LittleEndian.Uint32(record.RawSample[8:12]))
 		data.SrcMac = [6]byte(record.RawSample[12:18])
 		data.DstMac = [6]byte(record.RawSample[18:24])
+		data.SrcPort = binary.LittleEndian.Uint16(record.RawSample[24:26])
+		data.DstPort = binary.LittleEndian.Uint16(record.RawSample[26:28])
 		fmt.Println(record.RawSample[0:len(record.RawSample)])
 		now := time.Now()
 
 		// Format the time as desired
 		formattedTime := now.Format("15:04:05.000000")
-		fmt.Printf("%s Protocol: %d, SRC IP: %s DST IP: %s SRC MAC %s DST MAC %s\n", formattedTime, data.Protocol, getIP(data.SrcIP), getIP(data.DstIP), convertToMACAddress(data.SrcMac), convertToMACAddress(data.DstMac))
+		fmt.Printf("%s Protocol: %d, SRC IP: %s DST IP: %s SRC MAC %s DST MAC %s\n SRC PORT %v DST PORT %v", formattedTime, data.Protocol, getIP(data.SrcIP), getIP(data.DstIP), convertToMACAddress(data.SrcMac), convertToMACAddress(data.DstMac), data.SrcPort, data.DstPort)
 	}
 }
 
