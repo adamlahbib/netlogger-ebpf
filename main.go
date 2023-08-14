@@ -26,6 +26,18 @@ type Data struct {
 }
 
 func main() {
+
+	protocols := map[int]string{
+		0:  "HOPOPT",
+		1:  "ICMP",
+		2:  "IGMP",
+		3:  "GGP",
+		4:  "IPv4",
+		5:  "ST",
+		6:  "TCP",
+		17: "UDP",
+	}
+
 	spec, err := ebpf.LoadCollectionSpec("./net-logger.ebpf.o")
 	if err != nil {
 		panic(err)
@@ -91,7 +103,7 @@ func main() {
 
 		// Format the time as desired
 		formattedTime := now.Format("15:04:05.000000")
-		fmt.Printf("%s Protocol: %d, SRC IP: %s DST IP: %s SRC MAC %s DST MAC %s\n SRC PORT %v DST PORT %v", formattedTime, data.Protocol, getIP(data.SrcIP), getIP(data.DstIP), convertToMACAddress(data.SrcMac), convertToMACAddress(data.DstMac), data.SrcPort, data.DstPort)
+		fmt.Printf("%s Protocol: %v, SRC IP: %s DST IP: %s SRC MAC %s DST MAC %s\n SRC PORT %v DST PORT %v", formattedTime, protocols[int(data.Protocol)], getIP(data.SrcIP), getIP(data.DstIP), convertToMACAddress(data.SrcMac), convertToMACAddress(data.DstMac), data.SrcPort, data.DstPort)
 	}
 }
 
